@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  tge22-webapp-mdb-s1:
+    image: 'tge22-webapp-pdb-s1:SNAPSHOT'
+    ports:
+      - "8080:8080"
+      - "5005:5005"
+    environment:
+      JVM_OPTS: "-Xms128m -Xmx128m -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+      APP_OPTS: "--spring.datasource.url=jdbc:postgresql://storage-postgres:5432/app_db"
+
+  storage-postgres:
+    image: 'postgres:10'
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: app_db
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: pas123
+    command: ["postgres", "-c", "log_statement=all"]
