@@ -72,7 +72,7 @@ class AuthControllerTest {
             .get("accessToken");
 
         mockMvc
-            .perform(get("/api/auth/me")
+            .perform(get("/api/me")
                 .header(AUTHORIZATION_HEADER, token))
             .andExpect(status().isOk());
     }
@@ -91,7 +91,7 @@ class AuthControllerTest {
             .get("accessToken");
 
         mockMvc
-            .perform(get("/api/auth/me")
+            .perform(get("/api/me")
                 .header(AUTHORIZATION_HEADER, token))
             .andExpect(status().isOk());
     }
@@ -110,12 +110,12 @@ class AuthControllerTest {
             .get("accessToken");
 
         mockMvc
-            .perform(get("/api/auth/me")
+            .perform(get("/api/me")
                 .header(AUTHORIZATION_HEADER, token))
             .andExpect(status().isOk());
 
         mockMvc
-            .perform(get("/api/auth/me"))
+            .perform(get("/api/me"))
             .andExpect(status().isUnauthorized());
     }
 

@@ -16,7 +16,11 @@ abstract class BaseService<E, T, N> {
 
     @Transactional(readOnly = true)
     public T findById(UUID id) {
-        return mapper.to(repository.findById(id).orElseThrow(() -> new ResourceNotFoundException(repository.getClass().getSimpleName(), id.toString())));
+        return mapper.to(repository.findById(id).orElseThrow(() -> notFound(id)));
+    }
+
+    RuntimeException notFound(UUID id) {
+        return new ResourceNotFoundException(repository.getClass().getSimpleName(), id.toString());
     }
 
     T saveNew(N newTO) {

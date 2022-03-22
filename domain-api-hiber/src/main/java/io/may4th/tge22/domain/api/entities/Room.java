@@ -12,6 +12,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -30,13 +32,16 @@ public class Room {
     private UUID userId;
 
     @NotNull
-    @NotBlank
-    @Size(min = 1, max = 128)
-    @Pattern(regexp = CommonValidation.TRIMMED_SINGLE_LINE)
-    private String title;
+    private Instant instant = ZonedDateTime.now().toInstant();
 
     @NotNull
     @Size(max = 2)
     @ElementCollection(targetClass=UUID.class)
     private Set<UUID> users = new HashSet<>();
+
+    @NotNull
+    @NotBlank
+    @Size(min = 1, max = 128)
+    @Pattern(regexp = CommonValidation.TRIMMED_SINGLE_LINE)
+    private String title;
 }

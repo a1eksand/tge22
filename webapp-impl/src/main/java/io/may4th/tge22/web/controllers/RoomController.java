@@ -44,7 +44,7 @@ public class RoomController {
     @ApiOperation("getRoom")
     @ApiResponse(code = 200, message = "OK", response = RoomTO.class)
     @GetMapping
-    public RoomTO getRoom(
+    public RoomTO getRoomById(
         @ApiIgnore @CurrentUser UserDetailsImpl currentUser,
         @RequestParam UUID roomId
     ) {
