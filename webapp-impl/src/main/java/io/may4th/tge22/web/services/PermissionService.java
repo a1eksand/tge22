@@ -26,7 +26,7 @@ public class PermissionService {
             .of(roomId)
             .map(roomService::findById)
             .map(RoomTO::getUsers)
-            .filter(users -> users.contains(currentUser.getUuid()))
+            .filter(users -> users.containsValue(currentUser.getUuid()))
             .orElseThrow(PermissionDeniedException::new);
     }
 

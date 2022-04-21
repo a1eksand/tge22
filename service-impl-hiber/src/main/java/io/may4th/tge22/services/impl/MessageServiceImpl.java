@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,6 +33,14 @@ public class MessageServiceImpl extends BaseService<Message, MessageTO, NewMessa
     @Transactional(readOnly = true)
     public List<MessageTO> findAllByRoomId(UUID roomId) {
         return messageMapper.to(messageRepository.findAllByRoomIdOrderByInstant(roomId));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<MessageTO> findLastByRoomId(UUID roomId) {
+        return messageRepository
+            .findFirstByRoomIdOrderByInstantDesc(roomId)
+            .map(messageMapper::to);
     }
 
     @Override

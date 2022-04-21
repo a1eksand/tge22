@@ -1,5 +1,6 @@
 package io.may4th.tge22.services.impl;
 
+import io.may4th.tge22.common.Color;
 import io.may4th.tge22.domain.api.RoomRepository;
 import io.may4th.tge22.domain.api.entities.Room;
 import io.may4th.tge22.services.api.RoomService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,7 +35,7 @@ public class RoomServiceImpl extends BaseService<Room, RoomTO, NewRoomTO> implem
     @Transactional
     public RoomTO save(NewRoomTO newRoomTO) {
         var room = roomMapper.en(newRoomTO);
-        room.getUsers().add(room.getUserId());
+        room.getUsers().put(Color.WHITE, room.getUserId());
         return saveOrUpdate(room);
     }
 
@@ -45,23 +47,16 @@ public class RoomServiceImpl extends BaseService<Room, RoomTO, NewRoomTO> implem
 
     @Override
     @Transactional
-    public void joinUserToRoom(UUID userId, UUID roomId) {
-        roomRepository
-            .findById(roomId)
-            .ifPresentOrElse(
-                room -> {
-                    Optional
-                        .of(room)
-                        .map(Room::getUsers)
-                        .filter(users -> users.size() == 1)
-                        .filter(users -> !users.contains(userId))
-                        .orElseThrow(IllegalStateException::new)
-                        .add(userId);
-                    roomRepository.save(room);
-                },
-                () -> {
-                    throw notFound(roomId);
-                }
-            );
+    public Map<Color, UUID> joinUserToRoom(UUID userId, UUID roomId) {
+        var room = roomRepository.findById(roomId).orElseThrow(() -> notFound(roomId));
+        Optional
+            .of(room)
+            .map(Room::getUsers)
+            .filter(users -> users.size() == 1)
+            .filter(users -> !users.containsValue(userId))
+            .orElseThrow(IllegalStateException::new)
+            .put(Color.BLACK, userId);
+        roomRepository.save(room);
+        return room.getUsers();
     }
 }

@@ -6,6 +6,7 @@ import io.may4th.tge22.services.api.RoomService;
 import io.may4th.tge22.services.api.tos.NewRoomTO;
 import io.may4th.tge22.services.api.tos.RoomTO;
 import io.may4th.tge22.web.payload.ApiErrorResponse;
+import io.may4th.tge22.web.payload.ColorWithUUID;
 import io.may4th.tge22.web.security.UserDetailsImpl;
 import io.may4th.tge22.web.services.PermissionService;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -65,5 +67,30 @@ public class RoomController {
     ) {
         permissionService.validateCreatedByCurrentUser(currentUser, newRoomTO);
         return roomService.save(newRoomTO);
+    }
+
+    @ApiOperation("getMyRooms")
+    @ApiResponse(code = 200, message = "OK", response = RoomTO.class, responseContainer = "List")
+    @GetMapping("/my-rooms")
+    public List<RoomTO> getMyRooms(@ApiIgnore @CurrentUser UserDetailsImpl currentUser) {
+        return roomService.findAllByUsersId(currentUser.getUuid());
+    }
+
+    @ApiOperation("postJoin")
+    @ApiResponses({
+        @ApiResponse(code = 201, message = "Created", response = ColorWithUUID.class, responseContainer = "List"),
+        @ApiResponse(code = 409, message = "Conflict")
+    })
+    @PostMapping("/join")
+    public List<ColorWithUUID> postJoin(
+        @ApiIgnore @CurrentUser UserDetailsImpl currentUser,
+        @RequestParam UUID roomId
+    ) {
+        return roomService
+            .joinUserToRoom(currentUser.getUuid(), roomId)
+            .entrySet()
+            .stream()
+            .map(entry -> new ColorWithUUID(entry.getKey(), entry.getValue()))
+            .toList();
     }
 }

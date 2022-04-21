@@ -13,7 +13,7 @@ docker-compose -f docker-compose-dev-storage-postgres.yml up
 Ups storage
 
 ```
-./mvnw -f webapp-pdb-s1/pom.xml spring-boot:run
+./mvnw -f webapp-pdb-s1/pom.xml spring-boot:run -Dspring-boot.run.jvmArguments="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
 ```
 
 Runs backend app

@@ -27,7 +27,7 @@ abstract class BaseService<E, T, N> {
         return saveOrUpdate(mapper.en(newTO));
     }
 
-    T saveOrUpdate(E newTO) {
-        return mapper.to(repository.save((newTO)));
+    T saveOrUpdate(E entity) {
+        return mapper.to(repository.save((entity)));
     }
 }

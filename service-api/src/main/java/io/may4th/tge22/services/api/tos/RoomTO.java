@@ -1,12 +1,13 @@
 package io.may4th.tge22.services.api.tos;
 
+import io.may4th.tge22.common.Color;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 
 @Accessors(chain = true)
@@ -25,5 +26,5 @@ public class RoomTO {
     private String title;
 
     @ApiModelProperty(required = true)
-    Set<UUID> users;
+    Map<Color, UUID> users;
 }

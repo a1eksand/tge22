@@ -6,6 +6,7 @@ import io.may4th.tge22.services.api.MessageService;
 import io.may4th.tge22.services.api.tos.MessageTO;
 import io.may4th.tge22.services.api.tos.NewMessageTO;
 import io.may4th.tge22.web.payload.ApiErrorResponse;
+import io.may4th.tge22.web.payload.OptionalValue;
 import io.may4th.tge22.web.security.UserDetailsImpl;
 import io.may4th.tge22.web.services.PermissionService;
 import io.swagger.annotations.ApiOperation;
@@ -44,13 +45,26 @@ public class MessageController {
 
     @ApiOperation("getMessagesByRoomId")
     @ApiResponse(code = 200, message = "OK", response = MessageTO.class, responseContainer = "List")
-    @GetMapping
+    @GetMapping("/by-room")
     public List<MessageTO> getMessagesByRoomId(
         @ApiIgnore @CurrentUser UserDetailsImpl currentUser,
         @RequestParam UUID roomId
     ) {
         permissionService.validateRoomPermission(currentUser, roomId);
         return messageService.findAllByRoomId(roomId);
+    }
+
+    @ApiOperation("getLastMessageByRoomId")
+    @ApiResponse(code = 200, message = "OK")
+    @GetMapping("/last-by-room")
+    public OptionalValue<MessageTO> getLastMessageByRoomId(
+        @ApiIgnore @CurrentUser UserDetailsImpl currentUser,
+        @RequestParam UUID roomId
+    ) {
+        permissionService.validateRoomPermission(currentUser, roomId);
+        return messageService.findLastByRoomId(roomId)
+            .map(OptionalValue::new)
+            .orElse(OptionalValue.empty());
     }
 
     @ApiOperation("postMessage")

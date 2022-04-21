@@ -1,5 +1,6 @@
 package io.may4th.tge22.domain.api.entities;
 
+import io.may4th.tge22.common.Color;
 import io.may4th.tge22.common.CommonValidation;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +15,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.Instant;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Accessors(chain = true)
@@ -36,8 +37,8 @@ public class Room {
 
     @NotNull
     @Size(max = 2)
-    @ElementCollection(targetClass=UUID.class)
-    private Set<UUID> users = new HashSet<>();
+    @ElementCollection
+    private Map<Color, UUID> users = new HashMap<>();
 
     @NotNull
     @NotBlank
